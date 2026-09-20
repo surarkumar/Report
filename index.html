@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sone Restaurant - Apple Style ERP</title>
+    
+    <!-- PWA Install & Theme Color -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d35400">
+
     <!-- Beautiful Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome for Icons -->
@@ -615,6 +620,15 @@
     </div>
 
     <script>
+        // --- PWA SERVICE WORKER REGISTRATION ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker Registered'))
+                .catch(err => console.log('Service Worker Error', err));
+            });
+        }
+
         // --- UI LOGIC ---
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('show');
@@ -738,13 +752,16 @@
             return total;
         }
 
-        // --- CORE MATH CALCULATIONS ENGINE ---
+        // --- CORE MATH CALCULATIONS ENGINE (यहाँ बदलाव किए गए हैं) ---
         function calculateDailyTotals(dObj) {
             let tMarket = sumArray(dObj.market || []);
             let tStaff = sumArray(dObj.staff || []);
             let tGeneral = sumArray(dObj.general || []);
             let tNanaji = sumArray(dObj.nanajiArr || []);
+            
+            // Tip Amount
             let tTip = sumArray(dObj.tipArr || []);
+            
             let tDiscount = sumArray(dObj.discountArr || []);
 
             let tCostomerSum = 0;
@@ -761,11 +778,14 @@
             let cDiff = dObj.cashDiff || 0;
             let adjustedCredit = tCostomerSum - tDiscount - cDiff - tTip;
             
-            let totalSale = (dObj.online || 0) + (dObj.cash || 0) + adjustedCredit;
+            // नया बदलाव: Total Sale अब Costomer के कुल योग में से Tip घटाकर आएगी
+            let totalSale = tCostomerSum - tTip; 
+            
             let khana = totalSale - waterGrandTotal;
             let sone = khana - tMarket;
             
-            let totalOnline = (dObj.online || 0) + totalCustomerOnline;
+            // Online Payment अब सीधे Costomer की ऑनलाइन एंट्री से आएगी
+            let totalOnline = totalCustomerOnline;
 
             let deductionsFromCounter = tStaff + tGeneral + tTip;
             let finalCounterCash = (dObj.counterCash || 0) - deductionsFromCounter;
