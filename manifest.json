@@ -1,0 +1,17 @@
+{
+  "name": "Sone ERP Report",
+  "short_name": "Sone ERP",
+  "description": "Sone Restaurant Management ERP",
+  "start_url": "./report.html",
+  "display": "standalone",
+  "background_color": "#F2F2F7",
+  "theme_color": "#FF9500",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3135/3135696.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
