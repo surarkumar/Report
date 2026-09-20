@@ -423,4 +423,466 @@
                         <span style="font-size:22px; font-weight:700; color:var(--ios-text);">₹ <span id="val-counterCash">0</span></span>
                         <button class="delete-btn" style="width:auto; padding:0 10px; background:var(--ios-separator); color:var(--ios-text); font-weight:500; font-size:12px; gap:5px;" onclick="resetField('counterCash')"><i class="fas fa-undo"></i> Reset</button>
                     </div>
-               
+                </div>
+
+                <table class="report-table">
+                    <tr>
+                        <td>Deductions<br><small style="color:var(--ios-red); font-weight:500; font-size:11px;">(Staff + General + Tip Return)</small></td>
+                        <td id="calc-deductions" style="color: var(--ios-red);">₹ 0</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td style="color:var(--ios-green) !important;">Total Counter Cash</td>
+                        <td id="calc-finalcounter" style="color:var(--ios-green) !important;">₹ 0</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB: WATER & THANDA -->
+        <div id="tab-water" class="tab-panel">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-tint"></i> Water & Thanda Sales</h3>
+                    <div class="total-badge" id="lbl-total-water" style="background: var(--ios-input-bg); color:var(--ios-blue);">Total: ₹ 0</div>
+                </div>
+                <div class="water-grid">
+                    <div class="water-card"><h4>₹ 20</h4> <input type="number" id="w-20" onchange="saveWaterInputs()"></div>
+                    <div class="water-card"><h4>₹ 30</h4> <input type="number" id="w-30" onchange="saveWaterInputs()"></div>
+                    <div class="water-card"><h4>₹ 35</h4> <input type="number" id="w-35" onchange="saveWaterInputs()"></div>
+                    <div class="water-card"><h4>₹ 40</h4> <input type="number" id="w-40" onchange="saveWaterInputs()"></div>
+                    <div class="water-card"><h4>₹ 45</h4> <input type="number" id="w-45" onchange="saveWaterInputs()"></div>
+                    <div class="water-card"><h4>₹ 50</h4> <input type="number" id="w-50" onchange="saveWaterInputs()"></div>
+                    <div class="water-card"><h4>₹ 60</h4> <input type="number" id="w-60" onchange="saveWaterInputs()"></div>
+                    <div class="water-card"><h4>₹ 90</h4> <input type="number" id="w-90" onchange="saveWaterInputs()"></div>
+                </div>
+                <div class="summary-box" style="max-width: 300px; padding: 12px;">
+                    <h4 style="color: var(--ios-red); font-size:14px; margin-bottom:8px;">Water Discount (₹)</h4>
+                    <input type="number" id="w-discount" onchange="saveWaterInputs()" style="width:100%; border:none; background:var(--ios-input-bg); padding:10px; border-radius:8px; font-size:16px; color:var(--ios-red);">
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: COSTOMER (UDHAAR) -->
+        <div id="tab-costomer" class="tab-panel">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-users"></i> Costomer (उधार खाते)</h3>
+                    <div class="total-badge" id="lbl-total-costomer" style="background: var(--ios-input-bg); color:var(--ios-orange);">Total Credit: ₹ 0</div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group"><label>Customer Name</label><input type="text" id="costomer-name" placeholder="नाम लिखें..."></div>
+                    <div class="input-group"><label>Cash Credit</label><input type="number" id="costomer-cash" placeholder="0"></div>
+                    <div class="input-group"><label>Online Credit</label><input type="number" id="costomer-online" placeholder="0"></div>
+                    <div class="input-group"><label>Discount</label><input type="number" id="costomer-discount" placeholder="0"></div>
+                    <button class="btn-add" onclick="addEntry('costomer')">Add</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead><tr><th>Name</th><th>Cash</th><th>Online</th><th>Disc</th><th>Subtotal</th><th style="width:40px; text-align:center;">Del</th></tr></thead>
+                        <tbody id="tbody-costomer"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- REUSABLE TABS DESIGN (Market, Staff, General, etc.) -->
+        <div id="tab-market" class="tab-panel">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-shopping-basket"></i> Market Kharcha</h3>
+                    <div class="total-badge" id="lbl-total-market">Total: ₹ 0</div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group"><label>Item Name</label><input type="text" id="market-item" placeholder="सामान का नाम..."></div>
+                    <div class="input-group"><label>Deposit Amount (₹)</label><input type="number" id="market-amt" placeholder="0"></div>
+                    <button class="btn-add" onclick="addEntry('market')">Add</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>Item Details</th><th>Amount (₹)</th><th style="width:40px; text-align:center;">Del</th></tr></thead>
+                    <tbody id="tbody-market"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-staff" class="tab-panel">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-user-tie"></i> Staff Payment</h3>
+                    <div class="total-badge" id="lbl-total-staff">Total: ₹ 0</div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group"><label>Staff Name</label><input type="text" id="staff-name" placeholder="स्टाफ का नाम..."></div>
+                    <div class="input-group"><label>Payment (₹)</label><input type="number" id="staff-amt" placeholder="0"></div>
+                    <button class="btn-add" onclick="addEntry('staff')">Add</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>Staff Name</th><th>Payment (₹)</th><th style="width:40px; text-align:center;">Del</th></tr></thead>
+                    <tbody id="tbody-staff"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-general" class="tab-panel">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-box-open"></i> General Expense</h3>
+                    <div class="total-badge" id="lbl-total-general">Total: ₹ 0</div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group"><label>Saman Details</label><input type="text" id="general-item" placeholder="विवरण..."></div>
+                    <div class="input-group"><label>Payment (₹)</label><input type="number" id="general-amt" placeholder="0"></div>
+                    <button class="btn-add" onclick="addEntry('general')">Add</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>Details</th><th>Payment (₹)</th><th style="width:40px; text-align:center;">Del</th></tr></thead>
+                    <tbody id="tbody-general"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-nanaji" class="tab-panel">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-user"></i> Nana Ji Payment</h3>
+                    <div class="total-badge" id="lbl-total-nanaji">Total: ₹ 0</div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group"><label>Details</label><input type="text" id="nanaji-item" placeholder="विवरण..."></div>
+                    <div class="input-group"><label>Payment (₹)</label><input type="number" id="nanaji-amt" placeholder="0"></div>
+                    <button class="btn-add" onclick="addEntry('nanaji')">Add</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>Details</th><th>Payment (₹)</th><th style="width:40px; text-align:center;">Del</th></tr></thead>
+                    <tbody id="tbody-nanaji"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-tip" class="tab-panel">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-undo"></i> Tip & Cash Return</h3>
+                    <div class="total-badge" id="lbl-total-tip" style="background:var(--ios-input-bg); color:var(--ios-orange);">Total: ₹ 0</div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group"><label>Details</label><input type="text" id="tip-item" placeholder="विवरण..."></div>
+                    <div class="input-group"><label>Amount (₹)</label><input type="number" id="tip-amt" placeholder="0"></div>
+                    <button class="btn-add" onclick="addEntry('tip')">Add</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>Details</th><th>Amount (₹)</th><th style="width:40px; text-align:center;">Del</th></tr></thead>
+                    <tbody id="tbody-tip"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-discount" class="tab-panel">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-tags"></i> Extra Discount</h3>
+                    <div class="total-badge" id="lbl-total-discount">Total: ₹ 0</div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group"><label>Details</label><input type="text" id="discount-item" placeholder="विवरण..."></div>
+                    <div class="input-group"><label>Discount (₹)</label><input type="number" id="discount-amt" placeholder="0"></div>
+                    <button class="btn-add" onclick="addEntry('discount')">Add</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>Details</th><th>Amount (₹)</th><th style="width:40px; text-align:center;">Del</th></tr></thead>
+                    <tbody id="tbody-discount"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB: HISTORY & EXPORT -->
+        <div id="tab-history" class="tab-panel">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-cloud-download-alt"></i> Data Export & History</h3>
+                </div>
+                <div style="background: var(--ios-input-bg); padding: 15px; border-radius:12px; margin-bottom: 15px;">
+                    <h4 style="color:var(--ios-text); margin:0 0 8px 0; font-size:15px;"><i class="fas fa-info-circle"></i> Download Full Report</h4>
+                    <p style="color: var(--ios-text-muted); font-size: 13px; margin:0; line-height: 1.5;">
+                        यहाँ से आप अपने अब तक के सारे दिनों का डेटा Excel (CSV) शीट में डाउनलोड कर सकते हैं।
+                    </p>
+                </div>
+                <button class="btn-excel" onclick="exportExcel()">
+                    <i class="fas fa-file-excel"></i> Download All Data (Excel)
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- UI LOGIC ---
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('show');
+            document.getElementById('overlay').classList.toggle('show');
+        }
+
+        function openTab(tabId, element) {
+            document.querySelectorAll('.tab-panel').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+            document.getElementById('sidebar').classList.remove('show');
+            document.getElementById('overlay').classList.remove('show');
+            window.scrollTo(0,0);
+        }
+
+        // --- DATA MANAGEMENT ---
+        let appData = {};
+        let selectedDate = "";
+
+        window.onload = function() {
+            let today = new Date();
+            let yyyy = today.getFullYear();
+            let mm = String(today.getMonth() + 1).padStart(2, '0');
+            let dd = String(today.getDate()).padStart(2, '0');
+            document.getElementById('currentDate').value = `${yyyy}-${mm}-${dd}`;
+            loadDataForDate();
+        };
+
+        function loadDataForDate() {
+            selectedDate = document.getElementById('currentDate').value;
+            let storedData = JSON.parse(localStorage.getItem('sone_erp_ios_v2')) || {};
+            
+            if (!storedData[selectedDate]) {
+                storedData[selectedDate] = {
+                    market: [], costomer: [], staff: [], general: [], nanajiArr: [], tipArr: [], discountArr: [],
+                    online: 0, cash: 0, cashDiff: 0, counterCash: 0,
+                    water: { q20: 0, q30: 0, q35: 0, q40: 0, q45: 0, q50: 0, q60: 0, q90: 0, discount: 0 }
+                };
+            }
+            appData = storedData;
+            renderAll();
+        }
+
+        function saveData() {
+            localStorage.setItem('sone_erp_ios_v2', JSON.stringify(appData));
+            renderAll();
+        }
+
+        // --- ARRAY ADD/DELETE ---
+        function addEntry(type) {
+            let dataObj = appData[selectedDate];
+
+            if (type === 'costomer') {
+                let name = document.getElementById('costomer-name').value;
+                let cashC = parseFloat(document.getElementById('costomer-cash').value) || 0;
+                let onlineC = parseFloat(document.getElementById('costomer-online').value) || 0;
+                let discC = parseFloat(document.getElementById('costomer-discount').value) || 0;
+                if(name === '') return alert("कृपया नाम लिखें!");
+                dataObj.costomer.push({ name: name, cash: cashC, online: onlineC, discount: discC });
+                document.getElementById('costomer-name').value = ''; document.getElementById('costomer-cash').value = '';
+                document.getElementById('costomer-online').value = ''; document.getElementById('costomer-discount').value = '';
+            } else if(type === 'staff') {
+                let name = document.getElementById('staff-name').value;
+                let amt = parseFloat(document.getElementById('staff-amt').value) || 0;
+                if(name === '') return alert("कृपया नाम लिखें!");
+                dataObj.staff.push({ name: name, amt: amt });
+                document.getElementById('staff-name').value = ''; document.getElementById('staff-amt').value = '';
+            } else {
+                let arrMap = { 'market':'market', 'general':'general', 'nanaji':'nanajiArr', 'tip':'tipArr', 'discount':'discountArr' };
+                let arrName = arrMap[type];
+                let item = document.getElementById(type+'-item').value;
+                let amt = parseFloat(document.getElementById(type+'-amt').value) || 0;
+                if(item === '') return alert("कृपया विवरण लिखें!");
+                dataObj[arrName].push({ item: item, amt: amt });
+                document.getElementById(type+'-item').value = ''; document.getElementById(type+'-amt').value = '';
+            }
+            saveData();
+        }
+
+        function deleteEntry(type, index) {
+            appData[selectedDate][type].splice(index, 1);
+            saveData();
+        }
+
+        // --- ACCUMULATOR LOGIC (+ ADD & RESET) ---
+        function addToField(field) {
+            let val = parseFloat(document.getElementById(`inp-${field}-add`).value) || 0;
+            if(val !== 0) {
+                appData[selectedDate][field] += val;
+                document.getElementById(`inp-${field}-add`).value = '';
+                saveData();
+            }
+        }
+
+        function resetField(field) {
+            if(confirm("Reset (0) ?")) {
+                appData[selectedDate][field] = 0;
+                saveData();
+            }
+        }
+
+        // --- WATER SAVING ---
+        function saveWaterInputs() {
+            let dataObj = appData[selectedDate];
+            dataObj.water.q20 = parseFloat(document.getElementById('w-20').value) || 0;
+            dataObj.water.q30 = parseFloat(document.getElementById('w-30').value) || 0;
+            dataObj.water.q35 = parseFloat(document.getElementById('w-35').value) || 0;
+            dataObj.water.q40 = parseFloat(document.getElementById('w-40').value) || 0;
+            dataObj.water.q45 = parseFloat(document.getElementById('w-45').value) || 0;
+            dataObj.water.q50 = parseFloat(document.getElementById('w-50').value) || 0;
+            dataObj.water.q60 = parseFloat(document.getElementById('w-60').value) || 0;
+            dataObj.water.q90 = parseFloat(document.getElementById('w-90').value) || 0;
+            dataObj.water.discount = parseFloat(document.getElementById('w-discount').value) || 0;
+            saveData();
+        }
+
+        function sumArray(arr) {
+            let total = 0;
+            arr.forEach(row => { total += (row.amt || 0); });
+            return total;
+        }
+
+        // --- CORE MATH CALCULATIONS ENGINE ---
+        function calculateDailyTotals(dObj) {
+            let tMarket = sumArray(dObj.market || []);
+            let tStaff = sumArray(dObj.staff || []);
+            let tGeneral = sumArray(dObj.general || []);
+            let tNanaji = sumArray(dObj.nanajiArr || []);
+            let tTip = sumArray(dObj.tipArr || []);
+            let tDiscount = sumArray(dObj.discountArr || []);
+
+            let tCostomerSum = 0;
+            let totalCustomerOnline = 0;
+            (dObj.costomer || []).forEach(row => {
+                tCostomerSum += (row.cash + row.online + (row.discount || 0));
+                totalCustomerOnline += (row.online || 0);
+            });
+
+            let w = dObj.water || { q20: 0, q30: 0, q35: 0, q40: 0, q45: 0, q50: 0, q60: 0, q90: 0, discount: 0 };
+            let waterSubtotal = (w.q20*20) + (w.q30*30) + (w.q35*35) + (w.q40*40) + (w.q45*45) + (w.q50*50) + (w.q60*60) + (w.q90*90);
+            let waterGrandTotal = waterSubtotal - w.discount;
+
+            let cDiff = dObj.cashDiff || 0;
+            let adjustedCredit = tCostomerSum - tDiscount - cDiff - tTip;
+            
+            let totalSale = (dObj.online || 0) + (dObj.cash || 0) + adjustedCredit;
+            let khana = totalSale - waterGrandTotal;
+            let sone = khana - tMarket;
+            
+            let totalOnline = (dObj.online || 0) + totalCustomerOnline;
+
+            let deductionsFromCounter = tStaff + tGeneral + tTip;
+            let finalCounterCash = (dObj.counterCash || 0) - deductionsFromCounter;
+
+            return {
+                totalSale, waterGrandTotal, khana, tMarket, sone, totalOnline,
+                counterCash: dObj.counterCash || 0, finalCounterCash,
+                tCostomerSum, deductionsFromCounter, tNanaji, tTip, tDiscount, adjustedCredit
+            };
+        }
+
+        // --- RENDER DOM ---
+        function renderAll() {
+            let dataObj = appData[selectedDate];
+            
+            document.getElementById('val-cashDiff').innerText = dataObj.cashDiff || 0;
+            document.getElementById('val-counterCash').innerText = dataObj.counterCash || 0;
+            
+            let w = dataObj.water;
+            ['20','30','35','40','45','50','60','90','discount'].forEach(q => {
+                let val = (q === 'discount') ? w.discount : w[`q${q}`];
+                let el = document.getElementById(`w-${q}`);
+                if (document.activeElement !== el) { el.value = val || 0; }
+            });
+
+            let totals = calculateDailyTotals(dataObj);
+
+            const renderTable = (type, tbodyId, badgeId) => {
+                let tbody = document.getElementById(tbodyId);
+                tbody.innerHTML = '';
+                dataObj[type].forEach((row, i) => {
+                    let itemName = type === 'staff' ? row.name : row.item;
+                    tbody.innerHTML += `<tr><td>${itemName}</td><td>₹ ${row.amt}</td><td style="text-align:center;"><button class="delete-btn" onclick="deleteEntry('${type}', ${i})"><i class="fas fa-trash"></i></button></td></tr>`;
+                });
+            };
+
+            renderTable('market', 'tbody-market'); document.getElementById('lbl-total-market').innerText = `${totals.tMarket}`;
+            renderTable('staff', 'tbody-staff'); document.getElementById('lbl-total-staff').innerText = `${sumArray(dataObj.staff)}`;
+            renderTable('general', 'tbody-general'); document.getElementById('lbl-total-general').innerText = `${sumArray(dataObj.general)}`;
+            renderTable('nanajiArr', 'tbody-nanaji'); document.getElementById('lbl-total-nanaji').innerText = `${totals.tNanaji}`;
+            renderTable('tipArr', 'tbody-tip'); document.getElementById('lbl-total-tip').innerText = `${totals.tTip}`;
+            renderTable('discountArr', 'tbody-discount'); document.getElementById('lbl-total-discount').innerText = `${totals.tDiscount}`;
+
+            let tBodyCostomer = document.getElementById('tbody-costomer');
+            tBodyCostomer.innerHTML = '';
+            dataObj.costomer.forEach((row, i) => {
+                let disc = row.discount || 0;
+                let subTotalCredit = row.cash + row.online + disc;
+                tBodyCostomer.innerHTML += `<tr>
+                    <td>${row.name}</td><td>₹ ${row.cash}</td><td>₹ ${row.online}</td><td>₹ ${disc}</td>
+                    <td style="font-weight:600; color:var(--ios-blue);">₹ ${subTotalCredit}</td>
+                    <td style="text-align:center;"><button class="delete-btn" onclick="deleteEntry('costomer', ${i})"><i class="fas fa-trash"></i></button></td>
+                </tr>`;
+            });
+            document.getElementById('lbl-total-costomer').innerText = `${totals.tCostomerSum - totals.tTip}`;
+            document.getElementById('lbl-total-water').innerText = `${totals.waterGrandTotal}`;
+
+            // --- UPDATE DASHBOARD VIEW ---
+            document.getElementById('calc-totalsale').innerText = `₹ ${totals.totalSale}`;
+            document.getElementById('calc-waterpay').innerText = `₹ ${totals.waterGrandTotal}`;
+            document.getElementById('calc-khana').innerText = `₹ ${totals.khana}`;
+            document.getElementById('calc-market').innerText = `₹ ${totals.tMarket}`;
+            document.getElementById('calc-sone').innerText = `₹ ${totals.sone}`;
+            document.getElementById('calc-online').innerText = `₹ ${totals.totalOnline}`;
+
+            document.getElementById('calc-deductions').innerText = `₹ ${totals.deductionsFromCounter}`;
+            document.getElementById('calc-finalcounter').innerText = `₹ ${totals.finalCounterCash}`;
+        }
+
+        // --- WHATSAPP SHARE ---
+        function shareWhatsApp() {
+            let date = document.getElementById('currentDate').value;
+            let totals = calculateDailyTotals(appData[date]);
+            
+            let dParts = date.split('-');
+            let cleanDate = `${dParts[2]}/${dParts[1]}/${dParts[0]}`; 
+            
+            let text = `*👑 Sone Restaurant Daily Report*\n📅 Date: ${cleanDate}\n\n`;
+            text += `*🧾 Sale Kharcha Vivaran*\n`;
+            text += `▪️ Total Sale: ₹ ${totals.totalSale}\n`;
+            text += `▪️ Water Payment: ₹ ${totals.waterGrandTotal}\n`;
+            text += `▪️ Khana: ₹ ${totals.khana}\n`;
+            text += `▪️ Market Kharcha: ₹ ${totals.tMarket}\n`;
+            text += `*🔥 Sone (Net Profit): ₹ ${totals.sone}*\n`;
+            text += `▪️ Online Payment: ₹ ${totals.totalOnline}\n\n`;
+            
+            text += `*💵 Counter Cash Vivaran*\n`;
+            text += `▪️ Counter Cash (Entry): ₹ ${totals.counterCash}\n`;
+            text += `▪️ Deductions: ₹ ${totals.deductionsFromCounter}\n`;
+            text += `*✅ Final Counter Cash: ₹ ${totals.finalCounterCash}*\n`;
+            
+            let url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        // --- EXCEL EXPORT ---
+        function exportExcel() {
+            let csv = "Date,Total Sale (Rs),Water Payment (Rs),Khana (Rs),Market Kharcha (Rs),Sone Net Profit (Rs),Total Online Received (Rs),Counter Cash Entered (Rs),Final Counter Cash (Rs)\n";
+            
+            let dates = Object.keys(appData).sort((a,b) => new Date(b) - new Date(a));
+            if(dates.length === 0) { alert("अभी कोई डेटा उपलब्ध नहीं है!"); return; }
+
+            dates.forEach(date => {
+                let totals = calculateDailyTotals(appData[date]);
+                let dParts = date.split('-');
+                let cleanDate = `${dParts[2]}/${dParts[1]}/${dParts[0]}`; 
+                csv += `${cleanDate},${totals.totalSale},${totals.waterGrandTotal},${totals.khana},${totals.tMarket},${totals.sone},${totals.totalOnline},${totals.counterCash},${totals.finalCounterCash}\n`;
+            });
+            
+            let encodedUri = encodeURI("data:text/csv;charset=utf-8," + csv);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "Sone_Restaurant_All_Reports.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
