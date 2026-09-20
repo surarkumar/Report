@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sone Restaurant - Apple Style ERP</title>
+    <title>Sone Restaurant - ERP</title>
     
     <!-- PWA Install & Theme Color -->
     <link rel="manifest" href="manifest.json">
@@ -752,7 +752,7 @@
             return total;
         }
 
-        // --- CORE MATH CALCULATIONS ENGINE (यहाँ बदलाव किए गए हैं) ---
+        // --- CORE MATH CALCULATIONS ENGINE ---
         function calculateDailyTotals(dObj) {
             let tMarket = sumArray(dObj.market || []);
             let tStaff = sumArray(dObj.staff || []);
@@ -778,13 +778,12 @@
             let cDiff = dObj.cashDiff || 0;
             let adjustedCredit = tCostomerSum - tDiscount - cDiff - tTip;
             
-            // नया बदलाव: Total Sale अब Costomer के कुल योग में से Tip घटाकर आएगी
+            // Total Sale = Costomer Total - Tip
             let totalSale = tCostomerSum - tTip; 
             
             let khana = totalSale - waterGrandTotal;
             let sone = khana - tMarket;
             
-            // Online Payment अब सीधे Costomer की ऑनलाइन एंट्री से आएगी
             let totalOnline = totalCustomerOnline;
 
             let deductionsFromCounter = tStaff + tGeneral + tTip;
