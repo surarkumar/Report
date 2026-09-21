@@ -778,8 +778,8 @@
             let cDiff = dObj.cashDiff || 0;
             let adjustedCredit = tCostomerSum - tDiscount - cDiff - tTip;
             
-            // Total Sale = Costomer Total - Tip
-            let totalSale = tCostomerSum - tTip; 
+            // Total Sale = Costomer Total - Tip - Discount (Updated)
+            let totalSale = tCostomerSum - tTip - tDiscount; 
             
             let khana = totalSale - waterGrandTotal;
             let sone = khana - tMarket;
@@ -839,7 +839,7 @@
                     <td style="text-align:center;"><button class="delete-btn" onclick="deleteEntry('costomer', ${i})"><i class="fas fa-trash"></i></button></td>
                 </tr>`;
             });
-            document.getElementById('lbl-total-costomer').innerText = `${totals.tCostomerSum - totals.tTip}`;
+            document.getElementById('lbl-total-costomer').innerText = `${totals.tCostomerSum - totals.tTip - totals.tDiscount}`;
             document.getElementById('lbl-total-water').innerText = `${totals.waterGrandTotal}`;
 
             // --- UPDATE DASHBOARD VIEW ---
