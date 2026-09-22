@@ -96,11 +96,12 @@
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; z-index: 999; }
         .overlay.show { display: block; }
 
-        #hidden-receipt-container {
-            position: fixed; top: -9999px; left: 0; width: 420px; 
+        /* PRINT PREVIEW STYLES */
+        #print-preview-container {
             background: #F4F5F7; font-family: 'Poppins', sans-serif;
             border-radius: 16px; overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1); color: #1C1C1E; z-index: -100;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); color: #1C1C1E;
+            width: 100%; max-width: 500px; margin: 0 auto;
         }
         .receipt-header-img {
             background: linear-gradient(135deg, #FF9500 0%, #FF5E3A 100%);
@@ -119,36 +120,47 @@
             border-bottom: 2px solid #F2F2F7; padding-bottom: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
         }
         .receipt-tbl-img { width: 100%; border-collapse: collapse; }
-        .receipt-tbl-img td { padding: 8px 0; font-size: 15px; border-bottom: 1px dashed #E5E5EA; color: #3A3A3C; }
+        .receipt-tbl-img td { padding: 8px 0; font-size: 13px; border-bottom: 1px dashed #E5E5EA; color: #3A3A3C; }
         .receipt-tbl-img tr:last-child td { border-bottom: none; }
         .receipt-tbl-img td:last-child { text-align: right; font-weight: 600; color: #1C1C1E; }
         
         .highlight-net { background: #FFF4E5; border-radius: 8px; }
-        .highlight-net td { color: #d35400 !important; font-weight: 800 !important; font-size: 17px !important; padding: 12px 10px !important; border-bottom: none;}
+        .highlight-net td { color: #d35400 !important; font-weight: 800 !important; font-size: 15px !important; padding: 12px 10px !important; border-bottom: none;}
         .highlight-cash { background: #E8F8F5; border-radius: 8px; }
-        .highlight-cash td { color: #27ae60 !important; font-weight: 800 !important; font-size: 17px !important; padding: 12px 10px !important; border-bottom: none;}
+        .highlight-cash td { color: #27ae60 !important; font-weight: 800 !important; font-size: 15px !important; padding: 12px 10px !important; border-bottom: none;}
         
-        .market-list-item { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #F2F2F7; font-size: 14px; color:#555;}
+        .market-list-item { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #F2F2F7; font-size: 13px; color:#555;}
         .market-list-item:last-child { border-bottom: none; }
         .market-list-item span:last-child { font-weight: 600; color: #1C1C1E; }
         
         .receipt-footer-img { text-align: center; font-size: 12px; color: #8E8E93; font-weight: 500; padding: 5px 0 10px 0; }
         
-        /* EXPORT RADIO BUTTONS */
         .radio-group { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; background: #fff; padding: 10px; border-radius: 8px; border: 1px solid var(--ios-separator); }
         .radio-group label { font-size: 14px; font-weight: 600; color: var(--ios-text); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+
+        /* Hidden area for generating the photo smoothly */
+        #hidden-receipt-container {
+            position: fixed; top: -9999px; left: 0; width: 420px; 
+            background: #F4F5F7; font-family: 'Poppins', sans-serif;
+            border-radius: 16px; overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); color: #1C1C1E; z-index: -100;
+        }
     </style>
 </head>
 <body>
 
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-    <!-- SHARE MODAL -->
+    <!-- MAIN SHARE MODAL -->
     <div id="shareModal" class="share-modal">
         <div class="share-modal-content">
-            <h3 style="margin-top:0;">Share Report</h3>
-            <button class="share-btn btn-text" onclick="shareAsText()"><i class="fas fa-comment-alt"></i> Share as Text</button>
-            <button class="share-btn btn-photo" onclick="shareAsImage()"><i class="fas fa-camera"></i> Share as Photo</button>
+            <h3 style="margin-top:0;">Share Daily Report</h3>
+            <button class="share-btn btn-text" onclick="shareAsText()">
+                <i class="fas fa-comment-alt"></i> Share as Text
+            </button>
+            <button class="share-btn btn-photo" onclick="shareAsImage()">
+                <i class="fas fa-camera"></i> Share as Photo (Bill)
+            </button>
             <button class="share-btn btn-cancel" onclick="closeShareModal()">Cancel</button>
         </div>
     </div>
@@ -193,8 +205,6 @@
         </div>
     </div>
 
-    <div id="hidden-receipt-container"></div>
-
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -204,7 +214,7 @@
         <ul class="nav-links">
             <li><a class="active" onclick="openTab('tab-report', this)"><i class="fas fa-chart-pie"></i> Payment Report</a></li>
             <li><a onclick="openTab('tab-water', this)"><i class="fas fa-tint"></i> Water & Thanda</a></li>
-            <li><a onclick="openTab('tab-costomer', this)"><i class="fas fa-users"></i> Costomer Bil Receipt</a></li>
+            <li><a onclick="openTab('tab-costomer', this)"><i class="fas fa-users"></i> Costomer (उधार)</a></li>
             <li><a onclick="openTab('tab-market', this)"><i class="fas fa-shopping-basket"></i> Market (बाज़ार)</a></li>
             <li><a onclick="openTab('tab-staff', this)"><i class="fas fa-user-tie"></i> Staff Payment</a></li>
             <li><a onclick="openTab('tab-general', this)"><i class="fas fa-box-open"></i> General Expense</a></li>
@@ -214,6 +224,12 @@
                 <a onclick="openTab('tab-trash', this)"><i class="fas fa-trash-restore" style="color: var(--ios-red);"></i> Recycle Bin</a>
             </li>
             <li><a onclick="openTab('tab-history', this)"><i class="fas fa-cloud-download-alt"></i> History & Export</a></li>
+            
+            <li style="margin-top:10px;">
+                <a onclick="openTab('tab-print', this); generatePrintView();" style="background: rgba(52, 199, 89, 0.1); color: var(--ios-green); font-weight: 700;">
+                    <i class="fas fa-print" style="color: var(--ios-green);"></i> Print & Share (Bill)
+                </a>
+            </li>
         </ul>
     </div>
 
@@ -232,7 +248,7 @@
             </div>
         </div>
 
-        <div style="text-align:center; margin: 20px 20px 5px;">
+        <div style="text-align:center; margin: 20px 20px 5px;" id="main-title-area">
             <h1 style="font-family: 'Montserrat', sans-serif; font-size:24px; font-weight:800; margin:0 0 5px 0;">Sone Restaurant</h1>
             <p style="font-size:13px; font-weight:500; color:var(--ios-text-muted); margin:0;">
                 <i class="fas fa-map-marker-alt" style="color:var(--ios-orange);"></i> Dumraon Station Road, Dumraon
@@ -295,7 +311,7 @@
                 </div>
 
                 <table class="report-table">
-                    <tr><td>Deductions<br><small style="color:var(--ios-red); font-weight:500; font-size:11px;">(Staff + General + Tip/Cash Return)</small></td><td id="calc-deductions" style="color: var(--ios-red);">₹ 0</td></tr>
+                    <tr><td>Deductions<br><small style="color:var(--ios-red); font-weight:500; font-size:11px;">(Staff + General + Tip/Return)</small></td><td id="calc-deductions" style="color: var(--ios-red);">₹ 0</td></tr>
                     <tr style="background:#f4fcf6;"><td style="color:var(--ios-green); font-weight:700;">Final Counter Cash</td><td id="calc-finalcounter" style="color:var(--ios-green); font-weight:700; font-size:16px;">₹ 0</td></tr>
                 </table>
             </div>
@@ -320,22 +336,35 @@
         
         <div id="tab-trash" class="tab-panel"><div class="dashboard-card"><div class="card-header"><h3><i class="fas fa-trash-restore" style="color:red;"></i> Recycle Bin</h3></div><table class="data-table"><thead><tr><th>Type/Detail</th><th>Amt</th><th style="text-align:center;">Action</th></tr></thead><tbody id="tbody-trash"></tbody></table></div></div>
         
-        <!-- HISTORY AND EXPORT TAB (WITH FILTER) -->
+        <!-- HISTORY AND EXPORT TAB WITH BACKUP & RESTORE -->
         <div id="tab-history" class="tab-panel">
             <div class="dashboard-card">
                 <div class="card-header">
                     <h3><i class="fas fa-cloud-download-alt"></i> History & Data Export</h3>
                 </div>
                 
+                <!-- NEW BACKUP & RESTORE SECTION -->
+                <div style="background: var(--ios-card); border: 2px dashed var(--ios-orange); padding: 15px; border-radius:12px; margin-bottom: 15px;">
+                    <h4 style="color:var(--ios-text); margin:0 0 5px 0; font-size:15px;"><i class="fas fa-exchange-alt" style="color:var(--ios-orange);"></i> Backup & Restore (Data Transfer)</h4>
+                    <p style="color: var(--ios-text-muted); font-size: 12px; margin:0 0 10px 0; line-height: 1.4;">Phone ka data laptop me dalne ke liye pehle Backup (Download) karein, fir laptop me Restore (Upload) karein.</p>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-excel" style="background:var(--ios-blue); border-radius:8px; flex: 1;" onclick="backupData()">
+                            <i class="fas fa-download"></i> Backup Data
+                        </button>
+                        <button class="btn-excel" style="background:var(--ios-orange); border-radius:8px; flex: 1;" onclick="document.getElementById('restore-file').click()">
+                            <i class="fas fa-upload"></i> Restore Data
+                        </button>
+                        <input type="file" id="restore-file" style="display:none;" accept=".json" onchange="restoreData(event)">
+                    </div>
+                </div>
+
                 <div style="background: var(--ios-input-bg); padding: 15px; border-radius:12px; margin-bottom: 15px;">
                     <h4 style="color:var(--ios-text); margin:0 0 5px 0; font-size:15px;"><i class="fas fa-history"></i> View Full History</h4>
-                    <p style="color: var(--ios-text-muted); font-size: 12px; margin:0 0 10px 0; line-height: 1.4;">Yaha click karke aap pichle kisi bhi din ka record screen par hi dekh aur open kar sakte hain.</p>
                     <button class="btn-excel" style="background:var(--ios-orange); border-radius:8px;" onclick="openHistoryModal()">
                         <i class="fas fa-eye"></i> View History in Popup
                     </button>
                 </div>
 
-                <!-- EXPORT FILTER SECTION -->
                 <div style="background: var(--ios-card); border: 2px solid var(--ios-blue); padding: 15px; border-radius:12px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,122,255,0.1);">
                     <h4 style="color:var(--ios-blue); margin:0 0 10px 0; font-size:15px;"><i class="fas fa-filter"></i> Select Export Range</h4>
                     <div class="radio-group">
@@ -346,26 +375,38 @@
 
                 <div style="background: var(--ios-input-bg); padding: 15px; border-radius:12px; margin-bottom: 15px;">
                     <h4 style="color:var(--ios-text); margin:0 0 5px 0; font-size:15px;"><i class="fas fa-file-excel"></i> Download Summary Sheet</h4>
-                    <p style="color: var(--ios-text-muted); font-size: 12px; margin:0 0 10px 0; line-height: 1.4;">Main calculations aur totals ke sath-sath sabhi item ki details ek line (row) me aayegi.</p>
                     <button class="btn-excel" style="border-radius:8px;" onclick="exportSummaryExcel()">
                         <i class="fas fa-file-excel"></i> Download Summary
                     </button>
                 </div>
 
                 <div style="background: var(--ios-input-bg); padding: 15px; border-radius:12px;">
-                    <h4 style="color:var(--ios-text); margin:0 0 5px 0; font-size:15px;"><i class="fas fa-database"></i> Download Detailed Sheet (Tabs as Columns)</h4>
-                    <p style="color: var(--ios-text-muted); font-size: 12px; margin:0 0 10px 0; line-height: 1.4;">Har ek Tab (Market, Staff, Water aadi) ka alag Column banega, jisme uske saare item alag-alag cell me honge.</p>
+                    <h4 style="color:var(--ios-text); margin:0 0 5px 0; font-size:15px;"><i class="fas fa-database"></i> Download Detailed Sheet</h4>
                     <button class="btn-excel" style="background:var(--ios-green); border-radius:8px;" onclick="exportDetailedExcel()">
                         <i class="fas fa-table"></i> Download Detailed Ledger
                     </button>
                 </div>
-
             </div>
         </div>
+
+        <!-- PRINT PREVIEW TAB -->
+        <div id="tab-print" class="tab-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px; background:white; padding:15px; border-radius:16px; box-shadow:var(--shadow-soft);">
+                <h3 style="margin:0; font-size:16px;"><i class="fas fa-print" style="color:var(--ios-green);"></i> Bill Preview</h3>
+                <button onclick="downloadOrSharePrintTab()" style="background:var(--ios-blue); color:white; border:none; padding:10px 15px; border-radius:10px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px;">
+                    <i class="fas fa-download"></i> Download Photo
+                </button>
+            </div>
+            <div id="print-preview-container">
+                <!-- Content will be injected by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- HIDDEN RECEIPT CONTAINER FOR BACKGROUND PHOTO SHARE -->
+        <div id="hidden-receipt-container"></div>
     </div>
 
     <script>
-        // Force Cache Clear for Updates
         if ('serviceWorker' in navigator) { 
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
                 for(let registration of registrations) { registration.unregister(); }
@@ -390,6 +431,13 @@
             if(element) element.classList.add('active');
             document.getElementById('sidebar').classList.remove('show');
             document.getElementById('overlay').classList.remove('show');
+            
+            if(tabId === 'tab-print') {
+                document.getElementById('main-title-area').style.display = 'none';
+            } else {
+                document.getElementById('main-title-area').style.display = 'block';
+            }
+
             resetEditState(); window.scrollTo(0,0);
         }
 
@@ -429,6 +477,9 @@
             document.querySelectorAll('.nav-links a')[0].click();
         }
 
+        // ==========================================
+        // OPTION 1: SHARE AS TEXT (WHATSAPP)
+        // ==========================================
         function shareAsText() {
             closeShareModal();
             let date = document.getElementById('currentDate').value;
@@ -454,12 +505,16 @@
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
 
+        // ==========================================
+        // OPTION 2: SHARE AS PHOTO (ONLY MAIN REPORTS + MARKET)
+        // ==========================================
         async function shareAsImage() {
             closeShareModal();
             let date = document.getElementById('currentDate').value;
             let dObj = appData[date]; let t = calculateDailyTotals(dObj);
             let dParts = date.split('-'); let cleanDate = `${dParts[2]}/${dParts[1]}/${dParts[0]}`; 
 
+            // Building HTML for photo (ONLY Main Reports + Market Kharcha)
             let marketHTML = '';
             if (dObj.market && dObj.market.length > 0) {
                 let items = '';
@@ -505,13 +560,14 @@
             `;
 
             let container = document.getElementById('hidden-receipt-container');
-            container.innerHTML = htmlStr; container.style.top = '0px'; container.style.zIndex = '-100';
+            container.innerHTML = htmlStr; 
+            container.style.top = '0px'; container.style.zIndex = '-100';
 
             try {
                 let canvas = await html2canvas(container, { backgroundColor: '#F4F5F7', scale: 2 });
                 container.innerHTML = ''; container.style.top = '-9999px';
                 canvas.toBlob(async function(blob) {
-                    let file = new File([blob], "Sone_Report.png", { type: "image/png" });
+                    let file = new File([blob], `Sone_Report_${cleanDate}.png`, { type: "image/png" });
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         try { await navigator.share({ files: [file], title: 'Daily Report', text: 'Sone Restaurant Report' });
                         } catch (e) { console.log('Share canceled', e); }
@@ -524,6 +580,173 @@
             } catch(e) { container.style.top = '-9999px'; alert("Photo banne me dikkat aayi. Please dobara koshish karein."); }
         }
 
+        // ==========================================
+        // FULL PRINT VIEW GENERATOR (For Sidebar Tab)
+        // ==========================================
+        function generatePrintView() {
+            let date = document.getElementById('currentDate').value;
+            let dObj = appData[date]; let t = calculateDailyTotals(dObj);
+            let dParts = date.split('-'); let cleanDate = `${dParts[2]}/${dParts[1]}/${dParts[0]}`; 
+
+            const makeSection = (title, icon, arr, isDeduction = false) => {
+                if(!arr || arr.length === 0) return '';
+                let items = ''; let sectionTotal = 0;
+                arr.forEach(a => {
+                    items += `<div class="market-list-item"><span>${a.name || a.item}</span><span>Rs. ${a.amt}</span></div>`;
+                    sectionTotal += (a.amt || 0);
+                });
+                let totalColor = isDeduction ? '#FF3B30' : '#1C1C1E';
+                return `
+                    <div class="receipt-card-img">
+                        <div class="receipt-card-title"><i class="${icon}"></i> ${title}</div>
+                        ${items}
+                        <div style="text-align:right; font-weight:700; color:${totalColor}; margin-top:8px; border-top:1px dashed #ccc; padding-top:8px;">
+                            Total: Rs. ${sectionTotal}
+                        </div>
+                    </div>
+                `;
+            };
+
+            let custHTML = '';
+            if(dObj.costomer && dObj.costomer.length > 0) {
+                let items = ''; let totalCustSum = 0;
+                dObj.costomer.forEach(c => {
+                    let sub = c.cash + c.online + (c.discount||0);
+                    totalCustSum += sub;
+                    items += `<div class="market-list-item" style="flex-direction:column; gap:4px;">
+                                <div style="display:flex; justify-content:space-between; font-weight:600; color:#1C1C1E;"><span>${c.name}</span><span>Rs. ${sub}</span></div>
+                                <div style="font-size:11px; color:#8E8E93;">(Cash: ${c.cash} | Online: ${c.online} | Disc: ${c.discount||0})</div>
+                              </div>`;
+                });
+                custHTML = `
+                    <div class="receipt-card-img">
+                        <div class="receipt-card-title"><i class="fas fa-users"></i> Customer Details</div>
+                        ${items}
+                        <div style="text-align:right; font-weight:700; margin-top:8px; border-top:1px dashed #ccc; padding-top:8px;">Total: Rs. ${totalCustSum}</div>
+                    </div>`;
+            }
+
+            let marketHTML = makeSection('Market Kharcha', 'fas fa-shopping-basket', dObj.market, true);
+            let staffHTML = makeSection('Staff Payment', 'fas fa-user-tie', dObj.staff, true);
+            let genHTML = makeSection('General Expense', 'fas fa-box-open', dObj.general, true);
+            let tipHTML = makeSection('Tip / Return', 'fas fa-undo', dObj.tipArr, true);
+            let discHTML = makeSection('Discount', 'fas fa-tags', dObj.discountArr, true);
+            let nanaHTML = makeSection('Nana Ji', 'fas fa-user', dObj.nanajiArr, true);
+
+            let counterCashSourcesHTML = '';
+            if (dObj.counterCashArr && dObj.counterCashArr.length > 0) {
+                counterCashSourcesHTML += `<tr><td colspan="2" style="padding: 5px 0 10px 0;"><div style="background:#F2F2F7; border-radius:8px; padding:8px 12px; margin-top:2px;"><div style="font-size:12px; font-weight:700; color:#8E8E93; margin-bottom:5px; text-transform:uppercase;">Entry Sources:</div>`;
+                dObj.counterCashArr.forEach(c => {
+                    counterCashSourcesHTML += `<div style="display:flex; justify-content:space-between; font-size:13px; color:#3A3A3C; margin-bottom:4px; padding-bottom:4px; border-bottom:1px solid #E5E5EA;"><span><i class="fas fa-level-up-alt" style="transform:rotate(90deg); color:#FF9500; margin-right:5px;"></i> ${c.item}</span><span style="font-weight:600;">Rs. ${c.amt}</span></div>`;
+                });
+                counterCashSourcesHTML += `</div></td></tr>`;
+            }
+
+            let htmlStr = `
+                <div class="receipt-header-img"><h2>Sone Restaurant</h2><p>Full Daily Report • ${cleanDate}</p></div>
+                <div class="receipt-body-img">
+                    <div class="receipt-card-img">
+                        <div class="receipt-card-title">🧾 Sale Kharcha Vivaran</div>
+                        <table class="receipt-tbl-img">
+                            <tr><td>Total Sale</td><td>Rs. ${t.totalSale}</td></tr>
+                            <tr><td>Water Payment</td><td>Rs. ${t.waterGrandTotal}</td></tr>
+                            <tr><td>Khana</td><td>Rs. ${t.khana}</td></tr>
+                            <tr><td>Total Market Kharcha</td><td>Rs. ${t.tMarket}</td></tr>
+                            <tr class="highlight-net"><td>Sone (Net Profit)</td><td>Rs. ${t.sone}</td></tr>
+                            <tr><td style="color:#007AFF;">Online Payment</td><td style="color:#007AFF;">Rs. ${t.totalOnline}</td></tr>
+                        </table>
+                    </div>
+                    
+                    <div class="receipt-card-img">
+                        <div class="receipt-card-title">💵 Counter Cash (Drawer)</div>
+                        <table class="receipt-tbl-img">
+                            <tr><td style="font-weight:700; color:#000;">Total Entry Amount</td><td style="font-weight:700; color:#000;">Rs. ${t.counterCashEntryTotal}</td></tr>
+                            ${counterCashSourcesHTML}
+                            <tr><td style="padding-top:10px;">Deductions <span style="font-size:11px;color:#FF3B30;">(Staff+Gen+Tip)</span></td><td style="padding-top:10px; color:#FF3B30;">- Rs. ${t.deductionsFromCounter}</td></tr>
+                            <tr class="highlight-cash"><td>Final Counter Cash</td><td>Rs. ${t.finalCounterCash}</td></tr>
+                        </table>
+                    </div>
+                    
+                    <!-- DYNAMIC SECTIONS -->
+                    ${custHTML}
+                    ${marketHTML}
+                    ${staffHTML}
+                    ${genHTML}
+                    ${tipHTML}
+                    ${discHTML}
+                    ${nanaHTML}
+
+                    <div class="receipt-footer-img">Report generated from Sone ERP System</div>
+                </div>
+            `;
+
+            document.getElementById('print-preview-container').innerHTML = htmlStr;
+        }
+
+        async function downloadOrSharePrintTab() {
+            let container = document.getElementById('print-preview-container');
+            let date = document.getElementById('currentDate').value;
+            let dParts = date.split('-'); let cleanDate = `${dParts[2]}-${dParts[1]}-${dParts[0]}`; 
+
+            window.scrollTo(0,0);
+            
+            try {
+                let canvas = await html2canvas(container, { backgroundColor: '#F4F5F7', scale: 2, useCORS: true, scrollY: -window.scrollY });
+                
+                canvas.toBlob(async function(blob) {
+                    let file = new File([blob], `Sone_Report_${cleanDate}.png`, { type: "image/png" });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        try { await navigator.share({ files: [file], title: 'Daily Report', text: 'Sone Restaurant Report' });
+                        } catch (e) { console.log('Share canceled', e); }
+                    } else {
+                        let dataUrl = canvas.toDataURL("image/png");
+                        let a = document.createElement('a'); a.href = dataUrl;
+                        a.download = `Sone_Report_${cleanDate}.png`; a.click();
+                        alert("Photo aapke phone me download ho gayi hai!");
+                    }
+                });
+            } catch(e) { alert("Photo banne me dikkat aayi. Please dobara koshish karein."); }
+        }
+
+        // ==========================================
+        // BACKUP AND RESTORE FUNCTIONS
+        // ==========================================
+        function backupData() {
+            let data = localStorage.getItem('sone_erp_ios_v2');
+            if(!data || data === '{}') return alert("Koi data nahi hai backup ke liye!");
+            
+            let dateStr = document.getElementById('currentDate').value;
+            let blob = new Blob([data], { type: "application/json" });
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = `Sone_Backup_${dateStr}.json`;
+            a.click();
+        }
+
+        function restoreData(event) {
+            let file = event.target.files[0];
+            if(!file) return;
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let json = JSON.parse(e.target.result);
+                    if(confirm("Dhyan dein: Purana data is naye (restore wale) data se replace ho jayega. Kya aap aage badhna chahte hain?")) {
+                        localStorage.setItem('sone_erp_ios_v2', JSON.stringify(json));
+                        appData = json;
+                        loadDataForDate();
+                        alert("Data successfully restore ho gaya hai!");
+                    }
+                } catch(err) {
+                    alert("Galat file! Kripya sahi Backup (.json) file chunein.");
+                }
+                event.target.value = ''; 
+            };
+            reader.readAsText(file);
+        }
+
+        // --- CORE DATA SYSTEM ---
         let appData = {}; let selectedDate = ""; let editState = { type: null, index: -1 };
 
         window.onload = function() {
@@ -535,7 +758,6 @@
         function loadDataForDate() {
             resetEditState(); selectedDate = document.getElementById('currentDate').value;
             
-            // Update Export Filter Label
             let dParts = selectedDate.split('-');
             document.getElementById('lbl-export-date').innerText = `${dParts[2]}/${dParts[1]}/${dParts[0]}`;
             
@@ -553,6 +775,10 @@
             }
 
             appData = stored; renderAll();
+            
+            if(document.getElementById('tab-print').classList.contains('active')){
+                generatePrintView();
+            }
         }
 
         function saveData() { localStorage.setItem('sone_erp_ios_v2', JSON.stringify(appData)); renderAll(); }
@@ -674,126 +900,10 @@
             document.getElementById('calc-khana').innerText = `₹ ${t.khana}`; document.getElementById('calc-market').innerText = `₹ ${t.tMarket}`;
             document.getElementById('calc-sone').innerText = `₹ ${t.sone}`; document.getElementById('calc-online').innerText = `₹ ${t.totalOnline}`;
             document.getElementById('calc-deductions').innerText = `₹ ${t.deductionsFromCounter}`; document.getElementById('calc-finalcounter').innerText = `₹ ${t.finalCounterCash}`;
-        }
-
-        // ==========================================
-        // EXCEL EXPORT - WITH RANGE FILTER & NO BOM
-        // ==========================================
-
-        function wrapCSV(text) {
-            if (!text) return '"-"';
-            return '"' + text.toString().replace(/"/g, '""') + '"';
-        }
-
-        function downloadCSVFile(csvString, filename) {
-            // Note: Removed BOM array here so ï»¿ issue is fixed in mobile Excel
-            let blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-            let url = URL.createObjectURL(blob);
-            let a = document.createElement("a"); 
-            a.href = url; a.download = filename; a.click();
-        }
-
-        // EXPORT 1: SUMMARY 
-        function exportSummaryExcel() {
-            try {
-                let range = document.querySelector('input[name="exportRange"]:checked').value;
-                let dates = Object.keys(appData).sort((a,b)=>new Date(b)-new Date(a)); 
-                
-                if (range === 'single') {
-                    if (!appData[selectedDate]) return alert("Is date par koi data nahi hai!");
-                    dates = [selectedDate]; // Sirf ek din ka array ban jayega
-                }
-
-                if(!dates.length) return alert("No Data!");
-
-                let csv = "Date,Total Sale,Water Payment,Khana,Total Market Kharcha,Market Items Detail,Sone Net Profit,Online Payment,Counter Cash Total,Counter Cash Sources,Deductions (Staff+Gen+Tip),Deductions Detail,Final Counter Cash\n";
-                
-                dates.forEach(d => {
-                    let dObj = appData[d]; let t = calculateDailyTotals(dObj); 
-                    let dp = d.split('-'); let c = `${dp[2]}/${dp[1]}/${dp[0]}`; 
-                    
-                    let marketDetail = wrapCSV((dObj.market||[]).map(m=>`${m.item} (Rs.${m.amt})`).join(' | '));
-                    let cashSourcesDetail = wrapCSV((dObj.counterCashArr||[]).map(src=>`${src.item} (Rs.${src.amt})`).join(' | '));
-                    
-                    let dedDetailsArr = [];
-                    (dObj.staff||[]).forEach(s=> dedDetailsArr.push(`Staff: ${s.name} (Rs.${s.amt})`));
-                    (dObj.general||[]).forEach(g=> dedDetailsArr.push(`Gen: ${g.item} (Rs.${g.amt})`));
-                    (dObj.tipArr||[]).forEach(tp=> dedDetailsArr.push(`Tip: ${tp.item} (Rs.${tp.amt})`));
-                    let dedDetail = wrapCSV(dedDetailsArr.join(' | '));
-
-                    csv += `${c},${t.totalSale},${t.waterGrandTotal},${t.khana},${t.tMarket},${marketDetail},${t.sone},${t.totalOnline},${t.counterCashEntryTotal},${cashSourcesDetail},${t.deductionsFromCounter},${dedDetail},${t.finalCounterCash}\n`;
-                });
-                
-                let fileName = range === 'single' ? `Sone_Summary_${selectedDate}.csv` : "Sone_Summary_All.csv";
-                downloadCSVFile(csv, fileName);
-            } catch(e) { alert("Download failed: " + e.message); }
-        }
-
-        // EXPORT 2: DETAILED TABS (EK-EK ITEM ALAG CELL ME)
-        function exportDetailedExcel() {
-            try {
-                let range = document.querySelector('input[name="exportRange"]:checked').value;
-                let dates = Object.keys(appData).sort((a,b)=>new Date(b)-new Date(a));
-                
-                if (range === 'single') {
-                    if (!appData[selectedDate]) return alert("Is date par koi data nahi hai!");
-                    dates = [selectedDate];
-                }
-
-                if(!dates.length) return alert("No Data!");
-                
-                let csv = "Date,Costomer (Udhaar),Market Kharcha,Staff Payment,General Expense,Nana Ji,Tip / Return,Discount,Counter Cash Sources,Water Sales\n";
-                
-                dates.forEach(d => {
-                    let dObj = appData[d];
-                    let dp = d.split('-'); let cleanDate = `${dp[2]}/${dp[1]}/${dp[0]}`;
-                    
-                    let cArr = (dObj.costomer||[]).map(c => `${c.name} (Cash:Rs.${c.cash} Onl:Rs.${c.online} Disc:Rs.${c.discount||0})`);
-                    let mArr = (dObj.market||[]).map(x => `${x.item} = Rs.${x.amt}`);
-                    let sArr = (dObj.staff||[]).map(x => `${x.name} = Rs.${x.amt}`);
-                    let gArr = (dObj.general||[]).map(x => `${x.item} = Rs.${x.amt}`);
-                    let nArr = (dObj.nanajiArr||[]).map(x => `${x.item} = Rs.${x.amt}`);
-                    let tArr = (dObj.tipArr||[]).map(x => `${x.item} = Rs.${x.amt}`);
-                    let dArr = (dObj.discountArr||[]).map(x => `${x.item} = Rs.${x.amt}`);
-                    let ccArr = (dObj.counterCashArr||[]).map(x => `${x.item} = Rs.${x.amt}`);
-                    
-                    let wStrArr = [];
-                    let w = dObj.water;
-                    if(w) {
-                        if(w.q20) wStrArr.push(`20 x ${w.q20} = Rs.${w.q20*20}`);
-                        if(w.q30) wStrArr.push(`30 x ${w.q30} = Rs.${w.q30*30}`);
-                        if(w.q35) wStrArr.push(`35 x ${w.q35} = Rs.${w.q35*35}`);
-                        if(w.q40) wStrArr.push(`40 x ${w.q40} = Rs.${w.q40*40}`);
-                        if(w.q45) wStrArr.push(`45 x ${w.q45} = Rs.${w.q45*45}`);
-                        if(w.q50) wStrArr.push(`50 x ${w.q50} = Rs.${w.q50*50}`);
-                        if(w.q60) wStrArr.push(`60 x ${w.q60} = Rs.${w.q60*60}`);
-                        if(w.q90) wStrArr.push(`90 x ${w.q90} = Rs.${w.q90*90}`);
-                        if(w.discount) wStrArr.push(`Discount = -Rs.${w.discount}`);
-                    }
-
-                    let maxRows = Math.max(1, cArr.length, mArr.length, sArr.length, gArr.length, nArr.length, tArr.length, dArr.length, ccArr.length, wStrArr.length);
-
-                    for(let i=0; i<maxRows; i++) {
-                        let dateCol = (i === 0) ? cleanDate : '""'; 
-                        let cVal = cArr[i] ? wrapCSV(cArr[i]) : '"-"';
-                        let mVal = mArr[i] ? wrapCSV(mArr[i]) : '"-"';
-                        let sVal = sArr[i] ? wrapCSV(sArr[i]) : '"-"';
-                        let gVal = gArr[i] ? wrapCSV(gArr[i]) : '"-"';
-                        let nVal = nArr[i] ? wrapCSV(nArr[i]) : '"-"';
-                        let tVal = tArr[i] ? wrapCSV(tArr[i]) : '"-"';
-                        let dVal = dArr[i] ? wrapCSV(dArr[i]) : '"-"';
-                        let ccVal = ccArr[i] ? wrapCSV(ccArr[i]) : '"-"';
-                        let wVal = wStrArr[i] ? wrapCSV(wStrArr[i]) : '"-"';
-
-                        csv += `${dateCol},${cVal},${mVal},${sVal},${gVal},${nVal},${tVal},${dVal},${ccVal},${wVal}\n`;
-                    }
-                    
-                    csv += ` , , , , , , , , , \n`;
-                });
-                
-                let fileName = range === 'single' ? `Sone_Detailed_${selectedDate}.csv` : "Sone_Detailed_All.csv";
-                downloadCSVFile(csv, fileName);
-            } catch(e) { alert("Download failed: " + e.message); }
+        
+            if(document.getElementById('tab-print').classList.contains('active')){
+                generatePrintView();
+            }
         }
     </script>
 </body>
